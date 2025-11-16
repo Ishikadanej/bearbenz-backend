@@ -4,9 +4,68 @@ const { User, AuthProvider } = require("../models");
 const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require("uuid");
 const { adminAuth } = require("../lib/firebaseAdmin");
+const axios = require("axios");
+
+const sendOTP = async (req, res) => {
+  const { phone } = req.body;
+
+  try {
+    const response = await axios.post(
+      "https://api.mojoauth.com/users/phone",
+      { phone },
+      {
+        headers: {
+          "X-API-Key": process.env.MOJOAUTH_API_KEY,
+          "Content-Type": "application/json"
+        },
+      }
+    );
+
+    res.status(200).json(response.data);
+
+  } catch (err) {
+    console.log(err?.response?.data || err.message);
+    res.status(500).json(err?.response?.data || err.message);
+  }
+};
+const verifyOTP = async (req, res) => {
+  const { state_id, otp } = req.body;
+
+  try {
+    const response = await axios.post(
+      "https://api.mojoauth.com/v1/auth/phone/verify",
+      { state_id, otp },
+      {
+        headers: {
+          "X-API-Key": process.env.MOJOAUTH_API_KEY,
+          "Content-Type": "application/json"
+        },
+      }
+    );
+
+    res.status(200).json(response.data);
+
+  } catch (err) {
+    console.log(err?.response?.data || err.message);
+    res.status(500).json(err?.response?.data || err.message);
+  }
+};
 
 const register = async (req, res) => {
-  const { email, password, role } = req.body;
+  const { email, password, role, otpToken } = req.body;
+  // server verifies otpToken
+  let decoded;
+  try {
+    decoded = jwt.verify(otpToken, process.env.JWT_SECRET);
+  } catch (err) {
+    return res.status(401).json({ message: "Phone not verified or expired OTP" });
+  }
+  
+  // ensure phone matches register request
+  if (decoded.phone !== phone) {
+    return res.status(400).json({ message: "Phone mismatch" });
+  }
+
   try {
     const existingUser = await User.findOne({
       where: { email },
@@ -259,4 +318,6 @@ module.exports = {
   googleLogin,
   updateProfile,
   updateAddress,
+  sendOTP,
+  verifyOTP
 };

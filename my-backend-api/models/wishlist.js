@@ -18,11 +18,11 @@ module.exports = (sequelize, DataTypes) => {
   Wishlist.init(
     {
       userId: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.UUID,
         allowNull: false,
         references: {
           model: "Users",
-          key: "id",
+          key: "uid",
         },
         field: "userId",
         onUpdate: "CASCADE",

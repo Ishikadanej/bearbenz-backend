@@ -18,11 +18,11 @@ module.exports = (sequelize, DataTypes) => {
   Order.init(
     {
       userId: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.UUID,
         allowNull: false,
         references: {
           model: "Users",
-          key: "id",
+          key: "uid",
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",

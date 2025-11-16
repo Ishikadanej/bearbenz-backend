@@ -71,6 +71,11 @@ export const productType = defineType({
               ],
             }),
             defineField({
+              name: 'careandmaintainance',
+              title: 'care and maintainance',
+              type: 'text',
+            }),
+            defineField({
               name: 'price',
               title: 'Sale Price',
               type: 'number',

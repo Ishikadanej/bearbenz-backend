@@ -17,11 +17,11 @@ module.exports = (sequelize, DataTypes) => {
   RecentView.init(
     {
       userId: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.UUID,
         allowNull: false,
         references: {
           model: "Users",
-          key: "id",
+          key: "uid",
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
