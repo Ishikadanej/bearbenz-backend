@@ -73,6 +73,13 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.ENUM("processing", "completed", "failed"),
         allowNull: false,
         defaultValue: "processing",
+      }, deliveredAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
+      returnRequestedAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
       },
     },
     {

@@ -286,6 +286,63 @@ const updateOrderStatus = async (req, res) => {
   }
 };
 
+// POST /orders/:id/return
+const requestReturn = async (req, res) => {
+  try {
+    const userId = req.user.uid || req.user.id; // adapt to how you store auth
+    const orderId = req.params.id;
+
+    const order = await Order.findByPk(orderId);
+    if (!order) return res.status(404).json({ message: "Order not found." });
+
+    // ensure order belongs to user
+    if (String(order.userId) !== String(userId)) {
+      return res.status(403).json({ message: "You don't own this order." });
+    }
+
+    // must have been delivered
+    if (!order.deliveredAt) {
+      return res.status(400).json({ message: "Order not delivered yet." });
+    }
+
+    const deliveredTime = new Date(order.deliveredAt).getTime();
+    const now = Date.now();
+    const hoursSinceDelivery = (now - deliveredTime) / (1000 * 60 * 60);
+    if (hoursSinceDelivery > 24) {
+      return res.status(400).json({ message: "Return window (24h) has expired." });
+    }
+
+    // idempotency: if already requested or returned
+    if (order.orderStatus === "return_requested" || order.orderStatus === "returned") {
+      return res.status(400).json({ message: "Return already requested or processed." });
+    }
+
+    // update order to reflect return request
+    order.orderStatus = "return_requested";
+    order.returnRequestedAt = new Date();
+    await order.save();
+
+    // optional: automatically refund if paymentStatus === 'completed'
+    if (order.paymentStatus === "completed") {
+      // call your refund helper (e.g., config/razorpay.js)
+      try {
+        // await refundPayment(order);
+        // update paymentStatus when refund succeeded
+        // order.paymentStatus = 'refunded';
+        // await order.save();
+      } catch (refundErr) {
+        // log, maybe mark order with refundFailed flag or notify admin
+      }
+    }
+
+    // respond
+    return res.json({ message: "Return requested successfully.", order });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: "Server error." });
+  }
+};
+
 module.exports = {
   createorder,
   verifyPayment,
@@ -295,4 +352,5 @@ module.exports = {
   getOrderById,
   getOrdersByPincode,
   updateOrderStatus,
+  requestReturn,
 };

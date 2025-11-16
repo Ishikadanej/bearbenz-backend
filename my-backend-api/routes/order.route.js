@@ -12,5 +12,6 @@ router.get("/all-orders", isAdmin, orderController.getAllUsersOrders);
 router.get("/pincode", orderController.getOrdersByPincode);
 router.get("/:orderId", orderController.getOrderById);
 router.put("/orderstatus/:orderId", isAdmin, orderController.updateOrderStatus);
+router.post("/:id/return", authMiddleware, orderController.requestReturn);
 
 module.exports = router;
