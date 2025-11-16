@@ -1,4 +1,4 @@
-import { defineField, defineType } from 'sanity'
+import {defineField, defineType} from 'sanity'
 
 export const promoBannerType = defineType({
   name: 'promoBanner',
@@ -20,11 +20,29 @@ export const promoBannerType = defineType({
           name: 'banner',
           title: 'Banner',
           fields: [
-
+            defineField({
+              name: 'title',
+              title: 'Title',
+              type: 'string',
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'subtitle',
+              title: 'Subtitle',
+              type: 'string',
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'buttonText',
+              title: 'Button Text',
+              type: 'string',
+              initialValue: 'Buy Now',
+              validation: (rule) => rule.required(),
+            }),
             defineField({
               name: 'buttonLink',
               title: 'Button Link',
-              type: 'url',
+              type: 'string',
             }),
             defineField({
               name: 'image',
@@ -35,7 +53,12 @@ export const promoBannerType = defineType({
               },
               validation: (rule) => rule.required(),
             }),
-
+            defineField({
+              name: 'backgroundColor',
+              title: 'Background Color',
+              type: 'string',
+              description: 'Optional hex or Tailwind class (e.g. #f2f2f2 or bg-blue-100)',
+            }),
           ],
         },
       ],

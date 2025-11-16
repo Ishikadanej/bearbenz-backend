@@ -15,6 +15,7 @@ import {featureSection} from './Aboutpage/featureSection'
 import {teamSection} from './Aboutpage/teamSection'
 import {getConsultant} from './Aboutpage/getCounsult'
 import {testimonialSection} from './Aboutpage/testimonialSection'
+import { offers } from './Homepage/offerStripe'
 
 export const schemaTypes = [
   heroBanner,
@@ -34,4 +35,5 @@ export const schemaTypes = [
   teamSection,
   getConsultant,
   testimonialSection,
+offers
 ]
