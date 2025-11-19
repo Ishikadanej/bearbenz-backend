@@ -15,7 +15,7 @@ router.put(
   authMiddleware,
   userController.updateAddress
 );
-router.post("/send-otp", userController.sendOTP);
-router.post("/verify-otp", userController.verifyOTP);
+// router.post("/send-otp", userController.sendOTP);
+// router.post("/verify-otp", userController.verifyOTP);
 
 module.exports = router;
