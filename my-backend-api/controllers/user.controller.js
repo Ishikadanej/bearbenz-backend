@@ -52,20 +52,8 @@ const verifyOTP = async (req, res) => {
 };
 
 const register = async (req, res) => {
-  const { email, password, role, otpToken } = req.body;
-  // server verifies otpToken
-  let decoded;
-  try {
-    decoded = jwt.verify(otpToken, process.env.JWT_SECRET);
-  } catch (err) {
-    return res.status(401).json({ message: "Phone not verified or expired OTP" });
-  }
+  const { email, password, role } = req.body;
   
-  // ensure phone matches register request
-  if (decoded.phone !== phone) {
-    return res.status(400).json({ message: "Phone mismatch" });
-  }
-
   try {
     const existingUser = await User.findOne({
       where: { email },
@@ -318,6 +306,4 @@ module.exports = {
   googleLogin,
   updateProfile,
   updateAddress,
-  sendOTP,
-  verifyOTP
 };
