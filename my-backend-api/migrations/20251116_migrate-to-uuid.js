@@ -15,7 +15,7 @@ module.exports = {
 
     // Recreate Users table with UUID primary key
     await queryInterface.createTable("Users", {
-      uid: {
+      id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
