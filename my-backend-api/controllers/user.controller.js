@@ -53,7 +53,6 @@ const verifyOTP = async (req, res) => {
 
 const register = async (req, res) => {
   const { email, password, role } = req.body;
-  // server verifies otpToken
   
   try {
     const existingUser = await User.findOne({
